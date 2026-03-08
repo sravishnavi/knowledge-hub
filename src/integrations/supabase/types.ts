@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       articles: {
         Row: {
+          attachments: Json | null
           author_id: string
           category_id: string | null
           content: string | null
@@ -29,6 +30,7 @@ export type Database = {
           views: number | null
         }
         Insert: {
+          attachments?: Json | null
           author_id: string
           category_id?: string | null
           content?: string | null
@@ -42,6 +44,7 @@ export type Database = {
           views?: number | null
         }
         Update: {
+          attachments?: Json | null
           author_id?: string
           category_id?: string | null
           content?: string | null

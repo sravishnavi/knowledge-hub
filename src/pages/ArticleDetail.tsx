@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Edit, Trash2, Eye, Calendar, User, Send, Loader2 } from "lucide-react";
+import { ArrowLeft, Edit, Trash2, Eye, Calendar, User, Send, Loader2, FileText, Image, Download } from "lucide-react";
 import { format } from "date-fns";
 
 export default function ArticleDetail() {
@@ -108,6 +108,32 @@ export default function ArticleDetail() {
           </div>
 
           <div className="prose prose-sm max-w-none whitespace-pre-wrap">{article.content}</div>
+
+          {/* Attachments */}
+          {(() => {
+            const atts = (article.attachments as unknown as { name: string; url: string; type: string; size: number }[] | null) || [];
+            if (atts.length === 0) return null;
+            return (
+              <div className="mt-6 pt-6 border-t">
+                <h3 className="font-bold text-sm mb-3">Attachments ({atts.length})</h3>
+                <div className="space-y-2">
+                  {atts.map((att, i) => (
+                    <a
+                      key={i}
+                      href={att.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 rounded-lg border bg-muted/30 px-3 py-2.5 hover:bg-muted/60 transition-colors"
+                    >
+                      {att.type?.startsWith("image/") ? <Image className="h-4 w-4 text-info" /> : <FileText className="h-4 w-4 text-primary" />}
+                      <span className="flex-1 text-sm font-medium truncate">{att.name}</span>
+                      <Download className="h-4 w-4 text-muted-foreground" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
 
           {(isAuthor || isAdmin) && (
             <div className="flex gap-2 mt-8 pt-6 border-t">
