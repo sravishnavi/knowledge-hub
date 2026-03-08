@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Edit, Trash2, Eye, Calendar, User, Send, Loader2 } from "lucide-react";
+import { ArrowLeft, Edit, Trash2, Eye, Calendar, User, Send, Loader2, FileText, Image, Download } from "lucide-react";
 import { format } from "date-fns";
 
 export default function ArticleDetail() {
