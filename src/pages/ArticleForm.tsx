@@ -53,7 +53,7 @@ export default function ArticleForm() {
       setContent(data.content || "");
       setCategoryId(data.category_id || "");
       setTagsInput((data.tags || []).join(", "));
-      setAttachments((data.attachments as Attachment[] | null) || []);
+      setAttachments((data.attachments as unknown as Attachment[] | null) || []);
     }
   }
 
