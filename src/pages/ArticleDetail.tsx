@@ -49,9 +49,11 @@ export default function ArticleDetail() {
   }
 
   async function incrementViews() {
-    await supabase.rpc("increment_views" as any, { article_id: id } as any).catch(() => {
-      // fallback: ignore if function doesn't exist
-    });
+    try {
+      await supabase.from("articles").update({ views: (article?.views || 0) + 1 } as any).eq("id", id!);
+    } catch {
+      // ignore
+    }
   }
 
   async function handleDelete() {
