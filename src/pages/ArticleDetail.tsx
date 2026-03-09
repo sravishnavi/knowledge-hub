@@ -32,20 +32,38 @@ export default function ArticleDetail() {
   async function fetchArticle() {
     const { data } = await supabase
       .from("articles")
-      .select("*, categories(name), profiles!articles_author_id_fkey(name)")
+      .select("*, categories(name)")
       .eq("id", id!)
-      .single() as any;
+      .maybeSingle() as any;
+    if (data?.author_id) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("name")
+        .eq("user_id", data.author_id)
+        .maybeSingle();
+      data.profiles = profile;
+    }
     setArticle(data);
     setLoading(false);
   }
 
   async function fetchComments() {
-    const { data } = await supabase
+    const { data: commentsData } = await supabase
       .from("comments")
-      .select("*, profiles!comments_user_id_fkey(name)")
+      .select("*")
       .eq("article_id", id!)
       .order("created_at", { ascending: true }) as any;
-    setComments(data || []);
+    if (commentsData && commentsData.length > 0) {
+      const userIds = [...new Set(commentsData.map((c: any) => c.user_id))];
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("user_id, name")
+        .in("user_id", userIds as string[]);
+      const profileMap = Object.fromEntries((profiles || []).map((p: any) => [p.user_id, p]));
+      setComments(commentsData.map((c: any) => ({ ...c, profiles: profileMap[c.user_id] || null })));
+    } else {
+      setComments([]);
+    }
   }
 
   async function incrementViews() {
